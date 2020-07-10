@@ -72,10 +72,16 @@ function setPosition() {
 function isInABox() {
   console.log(myGame.locationX, myGame.locationY);
   for (j = 1; j <= 6; j++) {
-    if (myGame.locationX === (gameBoardCanvas.left + myGame.squareSize) * j) {
+    if (
+      myGame.locationX >= (gameBoardCanvas.left + myGame.squareSize) * j - 5 &&
+      myGame.locationX <= (gameBoardCanvas.left + myGame.squareSize) * j + 5
+    ) {
       console.log("column " + j);
     }
-    if (myGame.locationY === (gameBoardCanvas.top + myGame.squareSize) * j) {
+    if (
+      myGame.locationY >= (gameBoardCanvas.top + myGame.squareSize) * j - 5 &&
+      myGame.locationY <= (gameBoardCanvas.top + myGame.squareSize) * j + 5
+    ) {
       console.log("row " + j);
     }
   }
