@@ -70,21 +70,45 @@ function setPosition() {
 }
 //function to determine if they clicked a side of a square
 function isInABox() {
-  console.log(myGame.locationX, myGame.locationY);
+  let columnFound = 0;
+  let rowFound = 0;
   for (j = 1; j <= 6; j++) {
     if (
-      myGame.locationX >= (gameBoardCanvas.left + myGame.squareSize) * j - 5 &&
-      myGame.locationX <= (gameBoardCanvas.left + myGame.squareSize) * j + 5
+      myGame.locationX >= (gameBoardCanvas.left + myGame.squareSize) * j - 10 &&
+      myGame.locationX <= (gameBoardCanvas.left + myGame.squareSize) * j + 10
     ) {
-      console.log("column " + j);
+      columnFound = j;
     }
     if (
-      myGame.locationY >= (gameBoardCanvas.top + myGame.squareSize) * j - 5 &&
-      myGame.locationY <= (gameBoardCanvas.top + myGame.squareSize) * j + 5
+      myGame.locationY >= (gameBoardCanvas.top + myGame.squareSize) * j - 10 &&
+      myGame.locationY <= (gameBoardCanvas.top + myGame.squareSize) * j + 10
     ) {
-      console.log("row " + j);
+      rowFound = j;
     }
   }
+  if (rowFound > 0) {
+    let count = 1;
+    while (count <= 6) {
+      if (48 * count >= myGame.locationX) {
+        columnFound = count;
+        break;
+      } else {
+        count++;
+      }
+    }
+  } else if (columnFound > 0) {
+    let count = 1;
+    while (count <= 6) {
+      if (48 * count >= myGame.locationY) {
+        rowFound = count;
+        break;
+      } else {
+        count++;
+      }
+    }
+  }
+  console.log(`row: ${rowFound} and column: ${columnFound}`);
+  console.log(`exact X: ${myGame.locationX} and exact Y: ${myGame.locationY}`);
 }
 
 //function to initialize the game
