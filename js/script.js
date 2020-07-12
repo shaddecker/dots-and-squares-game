@@ -7,6 +7,10 @@ class Square {
     this.upperRight = upperRight;
     this.lowerLeft = lowerLeft;
     this.lowerRight = lowerRight;
+    this.sideTop = false;
+    this.sideRight = false;
+    this.sideBottom = false;
+    this.sideLeft = false;
     this.closed = false;
     this.owner = "";
   }
@@ -21,15 +25,32 @@ class Game {
     this.gameSquares = [];
     this.dotSize = 5;
     this.squareSize = 40;
+    this.boardBoundryUpper = gameBoardCanvas.top;
+    this.boardBoundryRight = gameBoardCanvas.right - 10;
+    this.boardBoundryBottom = gameBoardCanvas.bottom - 10;
+    this.boardBoundryLeft = gameBoardCanvas.left;
   }
 }
-const myGame = new Game();
+
 let gameBoardElement = document.querySelector("canvas");
 let gameBoardCanvas = gameBoardElement.getBoundingClientRect();
+const myGame = new Game();
 
 //function to update each squares boundries
 function defineSquare(upperLeft, upperRight, lowerLeft, lowerRight) {
   tmpSquare = new Square(upperLeft, upperRight, lowerLeft, lowerRight);
+  if (upperLeft[1] === myGame.boardBoundryUpper) {
+    tmpSquare.sideTop = true;
+  }
+  if (lowerLeft[1] === myGame.boardBoundryBottom) {
+    tmpSquare.sideBottom = true;
+  }
+  if (upperLeft[0] === myGame.boardBoundryLeft) {
+    tmpSquare.sideLeft = true;
+  }
+  if (upperRight[0] === myGame.boardBoundryRight) {
+    tmpSquare.sideRight = true;
+  }
   myGame.gameSquares.push(tmpSquare);
 }
 
@@ -57,10 +78,18 @@ function drawDots() {
   }
 }
 
-//function to handle the click event
-function clickHandler() {
-  setPosition();
-  isInABox();
+function whichSquare() {
+  console.log("which");
+}
+
+function drawLine(square, side) {
+  console.log("drawing");
+  //draw the square side
+  var ctx = gameBoardElement.getContext("2d");
+  ctx.beginPath();
+  ctx.moveTo(myGame.gameSquares[0].upperRight);
+  ctx.lineTo();
+  ctx.stroke();
 }
 
 //function to update the gameboard to the current clicked location
@@ -69,7 +98,7 @@ function setPosition() {
   myGame.locationY = event.clientY - gameBoardCanvas.top; // y == the location of the click in the document - the location (relative to the top) of the canvas in the document
 }
 //function to determine if they clicked a side of a square
-function isInABox() {
+function verifyClickPosition() {
   let columnFound = 0;
   let rowFound = 0;
   for (j = 1; j <= 6; j++) {
@@ -109,6 +138,15 @@ function isInABox() {
   }
   console.log(`row: ${rowFound} and column: ${columnFound}`);
   console.log(`exact X: ${myGame.locationX} and exact Y: ${myGame.locationY}`);
+  let squareSide = findSquareSide(rowFound, columnFound);
+
+  drawline(pointOne, pointTwo);
+}
+
+//function to handle the click event
+function clickHandler() {
+  setPosition();
+  verifyClickPosition();
 }
 
 //function to initialize the game
