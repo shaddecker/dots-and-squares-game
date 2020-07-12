@@ -78,17 +78,48 @@ function drawDots() {
   }
 }
 
-function whichSquare() {
-  console.log("which");
+function findSquare(row, column) {
+  console.log("fined square");
+  let square = null;
+  let column1 = [0, 1, 2, 3, 4, 5];
+  let column2 = [6, 7, 8, 9, 10, 11];
+  let column3 = [12, 13, 14, 15, 16, 17];
+  let column4 = [18, 19, 20, 21, 22, 23];
+  let column5 = [23, 24, 25, 26, 27, 28];
+  let column6 = [29, 30, 31, 32, 34, 35];
+  switch (column) {
+    case 1: {
+      square = column1[row];
+      break;
+    }
+    case 2: {
+      square = column2[row];
+      break;
+    }
+    case 3: {
+      square = column3[row];
+      break;
+    }
+    case 4: {
+      square = column4[row];
+      break;
+    }
+    case 5: {
+      square = column5[row];
+      break;
+    }
+  }
+  return square;
 }
 
-function drawLine(square, side) {
-  console.log("drawing");
+function drawLine(pointOne, pointTwo) {
+  console.log("pointOne");
   //draw the square side
   var ctx = gameBoardElement.getContext("2d");
   ctx.beginPath();
-  ctx.moveTo(myGame.gameSquares[0].upperRight);
-  ctx.lineTo();
+  ctx.moveTo(pointOne[0], pointOne[1]);
+  ctx.lineTo(pointTwo[0], pointTwo[1]);
+  ctx.lineWidth = 5;
   ctx.stroke();
 }
 
@@ -138,9 +169,9 @@ function verifyClickPosition() {
   }
   console.log(`row: ${rowFound} and column: ${columnFound}`);
   console.log(`exact X: ${myGame.locationX} and exact Y: ${myGame.locationY}`);
-  let squareSide = findSquareSide(rowFound, columnFound);
+  let square = findSquare(rowFound, columnFound);
 
-  drawline(pointOne, pointTwo);
+  drawLine(myGame.gameSquares[square].lowerRight, myGame.gameSquares[square].upperRight);
 }
 
 //function to handle the click event
