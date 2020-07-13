@@ -84,8 +84,8 @@ function findSquare(row, column) {
   let column2 = [6, 7, 8, 9, 10, 11];
   let column3 = [12, 13, 14, 15, 16, 17];
   let column4 = [18, 19, 20, 21, 22, 23];
-  let column5 = [23, 24, 25, 26, 27, 28];
-  let column6 = [29, 30, 31, 32, 34, 35];
+  let column5 = [24, 25, 26, 27, 28, 29];
+  let column6 = [30, 31, 32, 33, 34, 35];
   switch (column) {
     case 1: {
       square = column1[row - 1];
@@ -210,18 +210,41 @@ function getRowAndColumn() {
 function findSide(theSquare) {
   console.log(theSquare);
   if (myGame.locationX >= theSquare.upperLeft[0] - 10 && myGame.locationX <= theSquare.upperLeft[0] + 10) {
+    theSquare.sideLeft = true;
     return "left";
   } else {
     if (myGame.locationX >= theSquare.upperRight[0] - 10 && myGame.locationX <= theSquare.upperRight[0] + 10) {
+      theSquare.sideRight = true;
       return "right";
     } else {
       if (myGame.locationY >= theSquare.upperLeft[1] - 10 && myGame.locationY <= theSquare.upperLeft[1] + 10) {
+        theSquare.sideTop = true;
         return "top";
       } else {
         if (myGame.locationY >= theSquare.lowerLeft[1] - 10 && myGame.locationY <= theSquare.lowerLeft[1] + 10) {
+          theSquare.sideBottom = true;
           return "bottom";
         }
       }
+    }
+  }
+}
+
+function checkSides(theSquare) {
+  if (theSquare.sideLeft && theSquare.sideTop && theSquare.sideRight && theSquare.sideBottom) {
+    theSquare.owner = myGame.playerTurn;
+    ctx.beginPath();
+    ctx.rect(the.upperLeft, theSquare.upperRight, theSquare.lowerRight, theSquare.lowerLeft);
+    if (myGame.playerTurn === "Player 1") {
+      ctx.fillStyle = "red";
+    } else {
+      ctx.fillStyle = "blue";
+    }
+    ctx.fill();
+    if (myGame.playerTurn === "Player 1") {
+      myGame.playerTurn = "Player 2";
+    } else {
+      myGame.playerTurn = "Player 1";
     }
   }
 }
@@ -234,6 +257,7 @@ function clickHandler() {
   let side = findSide(myGame.gameSquares[square]);
   console.log(side);
   drawLine(myGame.gameSquares[square], side);
+  checkSides(myGame.gameSquares[square]);
 }
 
 //function to initialize the game
