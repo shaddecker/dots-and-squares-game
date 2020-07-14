@@ -46,6 +46,7 @@ let playerOneScoreBoard = document.querySelector(".player1");
 let playerTwoScoreBoard = document.querySelector(".player2");
 let gameBoardElement = document.querySelector("canvas");
 let gameBoardCanvas = gameBoardElement.getBoundingClientRect();
+let gameStartButton = document.querySelector(".buttons");
 const myGame = new Game();
 
 //function to update each squares boundries
@@ -88,6 +89,7 @@ function drawDots() {
         ctx.beginPath();
         ctx.arc(locationX, locationY, myGame.dotSize, 0, Math.PI * 2, true); // Draw a point using the arc function of the canvas with a point structure.
         ctx.fill(); // Close the path and fill.
+        ctx.closePath();
       }
       //calculate and add new square dimensions to the class
       let upperLeft = [locationX - myGame.squareSize, locationY - myGame.squareSize];
@@ -180,6 +182,7 @@ function drawLine(theSquare, theSide) {
   ctx.lineTo(pointTwo[0], pointTwo[1]);
   ctx.lineWidth = 5;
   ctx.stroke();
+  ctx.closePath();
 }
 
 //function to update the gameboard to the current clicked location
@@ -261,13 +264,14 @@ function checkSides() {
         theSquare.owner = myGame.playerTurn;
         var ctx = gameBoardElement.getContext("2d");
         ctx.beginPath();
-        ctx.rect(theSquare.upperLeft[0] - 8, theSquare.upperLeft[1] - 8, 48, 48);
         if (myGame.playerTurn === 1) {
           ctx.fillStyle = "red";
         } else {
           ctx.fillStyle = "blue";
         }
-        ctx.fill();
+        ctx.fillRect(theSquare.upperLeft[0] - 6, theSquare.upperLeft[1] - 6, 44, 44);
+        // ctx.fill();
+        ctx.closePath();
         theSquare.closed = true;
         //because a square was closed
         return true;
@@ -286,8 +290,6 @@ function clickHandler() {
   let square = findSquare(rowAndColumn[0], rowAndColumn[1]);
   let side = findSide(square, rowAndColumn);
   if (checkSides(myGame.gameSquares[square])) {
-    playerOneScoreBoard.innerText = `Player 1: ${myGame.player1Score}`;
-    playerTwoScoreBoard.innerText = `Player 2: ${myGame.player2Score}`;
     switch (myGame.playerTurn) {
       case 1:
         myGame.player1Score++;
@@ -296,6 +298,8 @@ function clickHandler() {
         myGame.player2Score++;
         break;
     }
+    playerOneScoreBoard.innerText = `Player 1: ${myGame.player1Score}`;
+    playerTwoScoreBoard.innerText = `Player 2: ${myGame.player2Score}`;
   } else {
     myGame.changePlayer();
   }
@@ -304,6 +308,9 @@ function clickHandler() {
 //function to initialize the game
 function setUpBoard() {
   gameBoardElement.removeEventListener("click", clickHandler);
+  var ctx = gameBoardElement.getContext("2d");
+  ctx.beginPath();
+  ctx.clearRect(0, 0, gameBoardCanvas.width, gameBoardCanvas.height, false);
   var myGame = null;
   myGame = new Game();
   playerOneScoreBoard.innerText = "Player 1: 0";
@@ -312,4 +319,4 @@ function setUpBoard() {
   gameBoardElement.addEventListener("click", clickHandler);
 }
 
-setUpBoard();
+gameStartButton.addEventListener("click", setUpBoard);
