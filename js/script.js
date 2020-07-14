@@ -42,6 +42,8 @@ class Game {
   }
 }
 
+let playerOneScoreBoard = document.querySelector(".player1");
+let playerTwoScoreBoard = document.querySelector(".player2");
 let gameBoardElement = document.querySelector("canvas");
 let gameBoardCanvas = gameBoardElement.getBoundingClientRect();
 const myGame = new Game();
