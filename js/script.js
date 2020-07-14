@@ -126,8 +126,8 @@ function findSquare(row, column) {
       break;
     }
   }
-  console.log(`row: ${row} column: ${column}`);
-  console.log(`square # ${square}`);
+  // console.log(`row: ${row} column: ${column}`);
+  // console.log(`square # ${square}`);
   return square;
 }
 
@@ -137,7 +137,7 @@ function drawLine(theSquare, theSide) {
   let pointOne = [];
   let pointTwo = [];
   let shortage = 5;
-  console.log(theSquare, theSide);
+  // console.log(theSquare, theSide);
   switch (theSide) {
     case "left": {
       pointOne = theSquare.lowerLeft;
@@ -220,40 +220,49 @@ function getRowAndColumn() {
     }
   }
 
-  console.log(`row: ${rowFound} and column: ${columnFound}`);
-  console.log(`exact X: ${myGame.locationX} and exact Y: ${myGame.locationY}`);
+  // console.log(`row: ${rowFound} and column: ${columnFound}`);
+  // console.log(`exact X: ${myGame.locationX} and exact Y: ${myGame.locationY}`);
   return [rowFound, columnFound];
 }
 
 function findSide(currentSquare, rowAndColumn) {
   let theSquare = myGame.gameSquares[currentSquare];
   if (myGame.locationX >= theSquare.upperRight[0] - 10 && myGame.locationX <= theSquare.upperRight[0] + 10) {
-    console.log("right side");
+    // console.log("right side");
     drawLine(theSquare, "right");
     theSquare.sideRight = true;
+    myGame.gameSquares[currentSquare + 6].sideLeft = true;
   } else if (myGame.locationY >= theSquare.lowerRight[1] - 10 && myGame.locationY <= theSquare.lowerRight[1] + 10) {
-    console.log("bottom side");
+    // console.log("bottom side");
     drawLine(theSquare, "bottom");
     theSquare.sideBottom = true;
     myGame.gameSquares[currentSquare + 1].sideTop = true;
   }
 }
 
-function checkSides(theSquare) {
-  if (theSquare.sideLeft && theSquare.sideTop && theSquare.sideRight && theSquare.sideBottom) {
-    theSquare.owner = myGame.playerTurn;
-    ctx.beginPath();
-    ctx.rect(the.upperLeft, theSquare.upperRight, theSquare.lowerRight, theSquare.lowerLeft);
-    if (myGame.playerTurn === "Player 1") {
-      ctx.fillStyle = "red";
-    } else {
-      ctx.fillStyle = "blue";
-    }
-    ctx.fill();
-    if (myGame.playerTurn === "Player 1") {
-      myGame.playerTurn = "Player 2";
-    } else {
-      myGame.playerTurn = "Player 1";
+function checkSides() {
+  for (j = 1; j < myGame.gameSquares.length; j++) {
+    let theSquare = myGame.gameSquares[j];
+    console.log(
+      `square ${j} sideTop: ${theSquare.sideTop} sideBottom: ${theSquare.sideBottom} sideLeft: ${theSquare.sideLeft} sideRight: ${theSquare.sideRight} `
+    );
+    console.log(theSquare);
+    if (theSquare.sideLeft && theSquare.sideTop && theSquare.sideRight && theSquare.sideBottom) {
+      theSquare.owner = myGame.playerTurn;
+      var ctx = gameBoardElement.getContext("2d");
+      ctx.beginPath();
+      ctx.rect(theSquare.upperLeft[0] - 8, theSquare.upperLeft[1] - 8, 48, 48);
+      if (myGame.playerTurn === "Player 1") {
+        ctx.fillStyle = "red";
+      } else {
+        ctx.fillStyle = "blue";
+      }
+      ctx.fill();
+      if (myGame.playerTurn === "Player 1") {
+        myGame.playerTurn = "Player 2";
+      } else {
+        myGame.playerTurn = "Player 1";
+      }
     }
   }
 }
@@ -264,7 +273,7 @@ function clickHandler() {
   let rowAndColumn = getRowAndColumn();
   let square = findSquare(rowAndColumn[0], rowAndColumn[1]);
   let side = findSide(square, rowAndColumn);
-  // checkSides(myGame.gameSquares[square]);
+  checkSides(myGame.gameSquares[square]);
 }
 
 //function to initialize the game
