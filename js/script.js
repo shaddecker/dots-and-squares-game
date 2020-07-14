@@ -13,6 +13,9 @@ class Square {
     this.sideLeft = false;
     this.closed = false;
     this.owner = "";
+    this.squareNumber = null;
+    this.row = null;
+    this.column = null;
   }
 }
 class Game {
@@ -37,8 +40,17 @@ let gameBoardCanvas = gameBoardElement.getBoundingClientRect();
 const myGame = new Game();
 
 //function to update each squares boundries
-function defineSquare(upperLeft, upperRight, lowerLeft, lowerRight) {
+function defineSquare(squareNumber, row, column, upperLeft, upperRight, lowerLeft, lowerRight) {
+  if (myGame.gameSquares.length === 0) {
+    //first game square data should be null
+    emptySquare = new Square([], [], [], []);
+    myGame.gameSquares.push(emptySquare);
+  }
+  //create a new game sqaure
   tmpSquare = new Square(upperLeft, upperRight, lowerLeft, lowerRight);
+  tmpSquare.squareNumber = squareNumber;
+  tmpSquare.row = row;
+  tmpSquare.column = column;
   if (upperLeft[1] === myGame.boardBoundryUpper) {
     tmpSquare.sideTop = true;
   }
@@ -58,11 +70,11 @@ function defineSquare(upperLeft, upperRight, lowerLeft, lowerRight) {
 function drawDots() {
   var ctx = gameBoardElement.getContext("2d");
   ctx.fillStyle = "#000000";
-  for (j = 1; j <= 6; j++) {
-    for (k = 1; k <= 6; k++) {
-      locationX = (gameBoardCanvas.left + myGame.squareSize) * j;
-      locationY = (gameBoardCanvas.top + myGame.squareSize) * k;
-      if (j < 6 && k < 6) {
+  for (column = 1; column <= 6; column++) {
+    for (row = 1; row <= 6; row++) {
+      locationX = (gameBoardCanvas.left + myGame.squareSize) * column;
+      locationY = (gameBoardCanvas.top + myGame.squareSize) * row;
+      if (column < 6 && row < 6) {
         //draw the dot
         ctx.beginPath();
         ctx.arc(locationX, locationY, myGame.dotSize, 0, Math.PI * 2, true); // Draw a point using the arc function of the canvas with a point structure.
@@ -73,19 +85,21 @@ function drawDots() {
       let upperRight = [locationX, locationY - myGame.squareSize];
       let lowerLeft = [locationX - myGame.squareSize, locationY];
       let lowerRight = [locationX, locationY];
-      defineSquare(upperLeft, upperRight, lowerLeft, lowerRight);
+
+      defineSquare(findSquare(row, column), row, column, upperLeft, upperRight, lowerLeft, lowerRight);
     }
   }
 }
 
+//using row and column define which square this is
 function findSquare(row, column) {
-  let square = null;
-  let column1 = [0, 1, 2, 3, 4, 5];
-  let column2 = [6, 7, 8, 9, 10, 11];
-  let column3 = [12, 13, 14, 15, 16, 17];
-  let column4 = [18, 19, 20, 21, 22, 23];
-  let column5 = [24, 25, 26, 27, 28, 29];
-  let column6 = [30, 31, 32, 33, 34, 35];
+  let square = 0;
+  let column1 = [1, 2, 3, 4, 5, 6];
+  let column2 = [7, 8, 9, 10, 11, 12];
+  let column3 = [13, 14, 15, 16, 17, 18];
+  let column4 = [19, 20, 21, 22, 23, 24];
+  let column5 = [25, 26, 27, 28, 29, 30];
+  let column6 = [31, 32, 33, 34, 35, 36];
   switch (column) {
     case 1: {
       square = column1[row - 1];
@@ -112,15 +126,18 @@ function findSquare(row, column) {
       break;
     }
   }
+  console.log(`row: ${row} column: ${column}`);
   console.log(`square # ${square}`);
   return square;
 }
 
+//draw a square side
 function drawLine(theSquare, theSide) {
   //draw the square side
   let pointOne = [];
   let pointTwo = [];
   let shortage = 5;
+  console.log(theSquare, theSide);
   switch (theSide) {
     case "left": {
       pointOne = theSquare.lowerLeft;
@@ -161,6 +178,7 @@ function setXAndYPosition() {
   myGame.locationX = event.clientX - gameBoardCanvas.left; // x == the location of the click in the document - the location (relative to the left) of the canvas in the document
   myGame.locationY = event.clientY - gameBoardCanvas.top; // y == the location of the click in the document - the location (relative to the top) of the canvas in the document
 }
+
 //function to determine if they clicked a side of a square
 function getRowAndColumn() {
   let columnFound = 0;
@@ -207,26 +225,17 @@ function getRowAndColumn() {
   return [rowFound, columnFound];
 }
 
-function findSide(theSquare) {
-  console.log(theSquare);
-  if (myGame.locationX >= theSquare.upperLeft[0] - 10 && myGame.locationX <= theSquare.upperLeft[0] + 10) {
-    theSquare.sideLeft = true;
-    return "left";
-  } else {
-    if (myGame.locationX >= theSquare.upperRight[0] - 10 && myGame.locationX <= theSquare.upperRight[0] + 10) {
-      theSquare.sideRight = true;
-      return "right";
-    } else {
-      if (myGame.locationY >= theSquare.upperLeft[1] - 10 && myGame.locationY <= theSquare.upperLeft[1] + 10) {
-        theSquare.sideTop = true;
-        return "top";
-      } else {
-        if (myGame.locationY >= theSquare.lowerLeft[1] - 10 && myGame.locationY <= theSquare.lowerLeft[1] + 10) {
-          theSquare.sideBottom = true;
-          return "bottom";
-        }
-      }
-    }
+function findSide(currentSquare, rowAndColumn) {
+  let theSquare = myGame.gameSquares[currentSquare];
+  if (myGame.locationX >= theSquare.upperRight[0] - 10 && myGame.locationX <= theSquare.upperRight[0] + 10) {
+    console.log("right side");
+    drawLine(theSquare, "right");
+    theSquare.sideRight = true;
+  } else if (myGame.locationY >= theSquare.lowerRight[1] - 10 && myGame.locationY <= theSquare.lowerRight[1] + 10) {
+    console.log("bottom side");
+    drawLine(theSquare, "bottom");
+    theSquare.sideBottom = true;
+    myGame.gameSquares[currentSquare + 1].sideTop = true;
   }
 }
 
@@ -254,10 +263,8 @@ function clickHandler() {
   setXAndYPosition();
   let rowAndColumn = getRowAndColumn();
   let square = findSquare(rowAndColumn[0], rowAndColumn[1]);
-  let side = findSide(myGame.gameSquares[square]);
-  console.log(side);
-  drawLine(myGame.gameSquares[square], side);
-  checkSides(myGame.gameSquares[square]);
+  let side = findSide(square, rowAndColumn);
+  // checkSides(myGame.gameSquares[square]);
 }
 
 //function to initialize the game
