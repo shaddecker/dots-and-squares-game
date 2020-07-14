@@ -33,6 +33,13 @@ class Game {
     this.boardBoundryBottom = gameBoardCanvas.bottom - 10;
     this.boardBoundryLeft = gameBoardCanvas.left;
   }
+  changePlayer() {
+    if (this.playerTurn === 1) {
+      this.playerTurn = 2;
+    } else {
+      this.playerTurn = 1;
+    }
+  }
 }
 
 let gameBoardElement = document.querySelector("canvas");
@@ -243,41 +250,58 @@ function findSide(currentSquare, rowAndColumn) {
 function checkSides() {
   for (j = 1; j < myGame.gameSquares.length; j++) {
     let theSquare = myGame.gameSquares[j];
-    console.log(
-      `square ${j} sideTop: ${theSquare.sideTop} sideBottom: ${theSquare.sideBottom} sideLeft: ${theSquare.sideLeft} sideRight: ${theSquare.sideRight} `
-    );
-    console.log(theSquare);
-    if (theSquare.sideLeft && theSquare.sideTop && theSquare.sideRight && theSquare.sideBottom) {
-      theSquare.owner = myGame.playerTurn;
-      var ctx = gameBoardElement.getContext("2d");
-      ctx.beginPath();
-      ctx.rect(theSquare.upperLeft[0] - 8, theSquare.upperLeft[1] - 8, 48, 48);
-      if (myGame.playerTurn === "Player 1") {
-        ctx.fillStyle = "red";
-      } else {
-        ctx.fillStyle = "blue";
-      }
-      ctx.fill();
-      if (myGame.playerTurn === "Player 1") {
-        myGame.playerTurn = "Player 2";
-      } else {
-        myGame.playerTurn = "Player 1";
+    // console.log(
+    //   `square ${j} sideTop: ${theSquare.sideTop} sideBottom: ${theSquare.sideBottom} sideLeft: ${theSquare.sideLeft} sideRight: ${theSquare.sideRight} `
+    // );
+    // console.log(theSquare);
+    if (!theSquare.closed) {
+      if (theSquare.sideLeft && theSquare.sideTop && theSquare.sideRight && theSquare.sideBottom) {
+        theSquare.owner = myGame.playerTurn;
+        var ctx = gameBoardElement.getContext("2d");
+        ctx.beginPath();
+        ctx.rect(theSquare.upperLeft[0] - 8, theSquare.upperLeft[1] - 8, 48, 48);
+        if (myGame.playerTurn === 1) {
+          ctx.fillStyle = "red";
+        } else {
+          ctx.fillStyle = "blue";
+        }
+        ctx.fill();
+        theSquare.closed = true;
+        //because a square was closed
+        return true;
       }
     }
   }
+  //no squares were closed
+  return false;
 }
 
 //function to handle the click event
 function clickHandler() {
+  console.log(myGame.playerTurn);
   setXAndYPosition();
   let rowAndColumn = getRowAndColumn();
   let square = findSquare(rowAndColumn[0], rowAndColumn[1]);
   let side = findSide(square, rowAndColumn);
-  checkSides(myGame.gameSquares[square]);
+  if (checkSides(myGame.gameSquares[square])) {
+    switch (myGame.playerTurn) {
+      case 1:
+        myGame.player1Score++;
+        break;
+      case 2:
+        myGame.player2Score++;
+        break;
+    }
+  } else {
+    myGame.changePlayer();
+  }
 }
 
 //function to initialize the game
 function setUpBoard() {
+  gameBoardElement.removeEventListener("click", clickHandler);
+  var myGame = null;
+  myGame = new Game();
   drawDots();
   gameBoardElement.addEventListener("click", clickHandler);
 }
