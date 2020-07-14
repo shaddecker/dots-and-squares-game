@@ -19,6 +19,7 @@ The player with the most points wins.</p>
 <ul>
 <li>Game board should consist of a 5 x 5 grid of dots</li>
 <li>User should be able to click where he/she wants a line drawn (which represents a side of a box)</li>
+<li><img src="./IMG-0494.jpg" width="400" height="400"></li>
 <li>User should not be able to click on an existing line and remove it</li>
 <li>Game should fill in any closed boxes and increment the score</li>
 <li>Game should make the score visible</li>
