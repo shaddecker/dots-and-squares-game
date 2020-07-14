@@ -286,6 +286,8 @@ function clickHandler() {
   let square = findSquare(rowAndColumn[0], rowAndColumn[1]);
   let side = findSide(square, rowAndColumn);
   if (checkSides(myGame.gameSquares[square])) {
+    playerOneScoreBoard.innerText = `Player 1: ${myGame.player1Score}`;
+    playerTwoScoreBoard.innerText = `Player 2: ${myGame.player2Score}`;
     switch (myGame.playerTurn) {
       case 1:
         myGame.player1Score++;
@@ -304,6 +306,8 @@ function setUpBoard() {
   gameBoardElement.removeEventListener("click", clickHandler);
   var myGame = null;
   myGame = new Game();
+  playerOneScoreBoard.innerText = "Player 1: 0";
+  playerTwoScoreBoard.innerText = "Player 2: 0";
   drawDots();
   gameBoardElement.addEventListener("click", clickHandler);
 }
