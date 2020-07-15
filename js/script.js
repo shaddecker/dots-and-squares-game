@@ -62,6 +62,7 @@ function clearVariables() {
 }
 
 //function to update each squares boundries
+//this is a setup function to help define boundries
 function defineSquare(squareNumber, row, column, upperLeft, upperRight, lowerLeft, lowerRight) {
   if (myGame.gameSquares.length === 0) {
     //first game square data should be null
@@ -250,6 +251,7 @@ function getRowAndColumn() {
   return [rowFound, columnFound];
 }
 
+//function to determine which side the user clicked on
 function findSide(currentSquare, rowAndColumn) {
   let theSquare = myGame.gameSquares[currentSquare];
   if (myGame.locationX >= theSquare.upperRight[0] - 10 && myGame.locationX <= theSquare.upperRight[0] + 10) {
@@ -265,6 +267,8 @@ function findSide(currentSquare, rowAndColumn) {
   }
 }
 
+//this function loops through defined squares and fills in any that are closed
+//there should be only 1 square to fill each time
 function checkSides() {
   for (j = 1; j < myGame.gameSquares.length; j++) {
     let theSquare = myGame.gameSquares[j];
@@ -295,9 +299,9 @@ function checkSides() {
   return false;
 }
 
-//function to handle the click event
+//function to handle the click event on the canvas
 function clickHandler() {
-  console.log(myGame.playerTurn);
+  // console.log(myGame.playerTurn);
   setXAndYPosition();
   let rowAndColumn = getRowAndColumn();
   let square = findSquare(rowAndColumn[0], rowAndColumn[1]);
@@ -318,7 +322,7 @@ function clickHandler() {
   }
 }
 
-//function to initialize the game
+//function to initialize the game and handles the click on the reset/start game button
 function setUpBoard() {
   gameBoardElement.removeEventListener("click", clickHandler);
   clearVariables();
