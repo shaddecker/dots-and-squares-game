@@ -47,12 +47,15 @@ let playerTwoScoreBoard = document.querySelector(".player2");
 let gameBoardElement = document.querySelector("canvas");
 let gameBoardCanvas = gameBoardElement.getBoundingClientRect();
 let gameStartButton = document.querySelector(".buttons");
+// const clickSound = document.querySelectorAll("source");
 const myGame = new Game();
 
 //function to clear all variables and reset the game
 function clearVariables() {
   playerOneScoreBoard.innerText = "Player 1: 0";
+  playerOneScoreBoard.style.backgroundColor = "white";
   playerTwoScoreBoard.innerText = "Player 2: 0";
+  playerOneScoreBoard.style.backgroundColor = "white";
   myGame.gameSquares = [];
   myGame.player1Score = 0;
   myGame.player2Score = 0;
@@ -299,6 +302,28 @@ function checkSides() {
   return false;
 }
 
+//loop through all squares to determine if there is a winner
+//handle the winner notification
+function checkForWinner() {
+  let bolWinner = true;
+  for (j = 1; j <= myGame.gameSquares.length - 1; j++) {
+    if (!myGame.gameSquares[j].closed) {
+      bolWinner = false;
+    }
+  }
+  if (bolWinner) {
+    gameBoardElement.removeEventListener("click", clickHandler);
+    if (myGame.player1Score > myGame.player2Score) {
+      playerOneScoreBoard.style.backgroundColor = "green";
+    } else if (myGame.player2Score > myGame.player1Score) {
+      playerTwoScoreBoard.style.backgroundColor = "green";
+    } else if (myGame.player1Score === myGame.player2Score) {
+      playerOneScoreBoard.style.backgroundColor = "green";
+      playerTwoScoreBoard.style.backgroundColor = "green";
+    }
+  }
+}
+
 //function to handle the click event on the canvas
 function clickHandler() {
   // console.log(myGame.playerTurn);
@@ -320,10 +345,12 @@ function clickHandler() {
   } else {
     myGame.changePlayer();
   }
+  checkForWinner();
 }
 
 //function to initialize the game and handles the click on the reset/start game button
 function setUpBoard() {
+  // clickSound.play();
   gameBoardElement.removeEventListener("click", clickHandler);
   clearVariables();
   var ctx = gameBoardElement.getContext("2d");
