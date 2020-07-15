@@ -55,7 +55,7 @@ function clearVariables() {
   playerOneScoreBoard.innerText = "Player 1: 0";
   playerOneScoreBoard.style.backgroundColor = "sandybrown";
   playerTwoScoreBoard.innerText = "Player 2: 0";
-  playerOneScoreBoard.style.backgroundColor = "dodgerblue";
+  playerTwoScoreBoard.style.backgroundColor = "dodgerblue";
   myGame.gameSquares = [];
   myGame.player1Score = 0;
   myGame.player2Score = 0;
