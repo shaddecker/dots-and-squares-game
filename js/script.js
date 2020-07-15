@@ -26,7 +26,7 @@ class Game {
     this.locationX = 0;
     this.locationY = 0;
     this.gameSquares = [];
-    this.dotSize = 5;
+    this.dotSize = 3;
     this.squareSize = 40;
     this.boardBoundryUpper = gameBoardCanvas.top;
     this.boardBoundryRight = gameBoardCanvas.right - 10;
@@ -48,6 +48,18 @@ let gameBoardElement = document.querySelector("canvas");
 let gameBoardCanvas = gameBoardElement.getBoundingClientRect();
 let gameStartButton = document.querySelector(".buttons");
 const myGame = new Game();
+
+//function to clear all variables and reset the game
+function clearVariables() {
+  playerOneScoreBoard.innerText = "Player 1: 0";
+  playerTwoScoreBoard.innerText = "Player 2: 0";
+  myGame.gameSquares = [];
+  myGame.player1Score = 0;
+  myGame.player2Score = 0;
+  myGame.playerTurn = 1;
+  myGame.locationX = 0;
+  myGame.locationY = 0;
+}
 
 //function to update each squares boundries
 function defineSquare(squareNumber, row, column, upperLeft, upperRight, lowerLeft, lowerRight) {
@@ -145,8 +157,8 @@ function findSquare(row, column) {
 //draw a square side
 function drawLine(theSquare, theSide) {
   //draw the square side
-  let pointOne = [];
-  let pointTwo = [];
+  let pointOne;
+  let pointTwo;
   let shortage = 5;
   // console.log(theSquare, theSide);
   switch (theSide) {
@@ -172,15 +184,16 @@ function drawLine(theSquare, theSide) {
       pointOne = theSquare.lowerLeft;
       pointTwo = theSquare.lowerRight;
       pointOne[0] = pointOne[0] - shortage;
+      // console.log(pointOne);
       break;
     }
   }
-  console.log(pointOne, pointTwo);
+  // console.log(theSquare, pointOne, pointTwo);
   var ctx = gameBoardElement.getContext("2d");
   ctx.beginPath();
   ctx.moveTo(pointOne[0], pointOne[1]);
   ctx.lineTo(pointTwo[0], pointTwo[1]);
-  ctx.lineWidth = 5;
+  ctx.lineWidth = 3;
   ctx.stroke();
   ctx.closePath();
 }
@@ -308,13 +321,10 @@ function clickHandler() {
 //function to initialize the game
 function setUpBoard() {
   gameBoardElement.removeEventListener("click", clickHandler);
+  clearVariables();
   var ctx = gameBoardElement.getContext("2d");
   ctx.beginPath();
   ctx.clearRect(0, 0, gameBoardCanvas.width, gameBoardCanvas.height, false);
-  var myGame = null;
-  myGame = new Game();
-  playerOneScoreBoard.innerText = "Player 1: 0";
-  playerTwoScoreBoard.innerText = "Player 2: 0";
   drawDots();
   gameBoardElement.addEventListener("click", clickHandler);
 }
