@@ -47,7 +47,7 @@ let playerTwoScoreBoard = document.querySelector(".player2");
 let gameBoardElement = document.querySelector("canvas");
 let gameBoardCanvas = gameBoardElement.getBoundingClientRect();
 let gameStartButton = document.querySelector(".buttons");
-// const clickSound = document.querySelectorAll("source");
+let clickSound = new Audio("click.mp3");
 const myGame = new Game();
 
 //function to clear all variables and reset the game
@@ -329,6 +329,7 @@ function checkForWinner() {
 //function to handle the click event on the canvas
 function clickHandler() {
   // console.log(myGame.playerTurn);
+  clickSound.play();
   setXAndYPosition();
   let rowAndColumn = getRowAndColumn();
   let square = findSquare(rowAndColumn[0], rowAndColumn[1]);
@@ -352,7 +353,7 @@ function clickHandler() {
 
 //function to initialize the game and handles the click on the reset/start game button
 function setUpBoard() {
-  // clickSound.play();
+  clickSound.play();
   gameBoardElement.removeEventListener("click", clickHandler);
   clearVariables();
   var ctx = gameBoardElement.getContext("2d");

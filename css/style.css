@@ -104,6 +104,9 @@ canvas {
   grid-column: 1;
   padding: 5px;
   background-color: sandybrown;
+  border: none;
+  border-radius: 12px;
+  margin: 2px;
 }
 
 .player2 {
@@ -114,4 +117,7 @@ canvas {
   grid-column: 2;
   padding: 5px;
   background-color: dodgerblue;
+  border: none;
+  border-radius: 12px;
+  margin: 2px;
 }
