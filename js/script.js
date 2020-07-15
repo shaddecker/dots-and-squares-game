@@ -53,9 +53,9 @@ const myGame = new Game();
 //function to clear all variables and reset the game
 function clearVariables() {
   playerOneScoreBoard.innerText = "Player 1: 0";
-  playerOneScoreBoard.style.backgroundColor = "white";
+  playerOneScoreBoard.style.backgroundColor = "sandybrown";
   playerTwoScoreBoard.innerText = "Player 2: 0";
-  playerOneScoreBoard.style.backgroundColor = "white";
+  playerOneScoreBoard.style.backgroundColor = "dodgerblue";
   myGame.gameSquares = [];
   myGame.player1Score = 0;
   myGame.player2Score = 0;
@@ -285,9 +285,9 @@ function checkSides() {
         var ctx = gameBoardElement.getContext("2d");
         ctx.beginPath();
         if (myGame.playerTurn === 1) {
-          ctx.fillStyle = "red";
+          ctx.fillStyle = "sandybrown";
         } else {
-          ctx.fillStyle = "blue";
+          ctx.fillStyle = "dodgerblue";
         }
         ctx.fillRect(theSquare.upperLeft[0] - 6, theSquare.upperLeft[1] - 6, 44, 44);
         // ctx.fill();
@@ -314,12 +314,14 @@ function checkForWinner() {
   if (bolWinner) {
     gameBoardElement.removeEventListener("click", clickHandler);
     if (myGame.player1Score > myGame.player2Score) {
-      playerOneScoreBoard.style.backgroundColor = "green";
+      playerOneScoreBoard.style.backgroundColor = "lightgreen";
+      playerTwoScoreBoard.style.backgroundColor = "white";
     } else if (myGame.player2Score > myGame.player1Score) {
-      playerTwoScoreBoard.style.backgroundColor = "green";
+      playerOneScoreBoard.style.backgroundColor = "white";
+      playerTwoScoreBoard.style.backgroundColor = "lightgreen";
     } else if (myGame.player1Score === myGame.player2Score) {
-      playerOneScoreBoard.style.backgroundColor = "green";
-      playerTwoScoreBoard.style.backgroundColor = "green";
+      playerOneScoreBoard.style.backgroundColor = "lightgreen";
+      playerTwoScoreBoard.style.backgroundColor = "lightgreen";
     }
   }
 }
